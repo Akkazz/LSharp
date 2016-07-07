@@ -20,25 +20,25 @@ namespace Firestorm_AIO.Helpers
 
         #endregion GetTarget
 
-        public static void SmartCast(this Spell spell, Obj_AI_Base target = null, HitChance hitchance = HitChance.Medium)
+        public static void SmartCast(this Spell spell, Obj_AI_Base target = null, HitChance hitchance = HitChance.Medium, int minimunHits = 0)
         {
             var orbMode = Variables.Orbwalker.GetActiveMode();
-
-            if (!spell.CanCast(target)) return;
 
             var hero = target as Obj_AI_Hero;
             if (hero != null && (orbMode.HasFlag(OrbwalkingMode.Combo) || orbMode.HasFlag(OrbwalkingMode.Hybrid)))
             {
+                if (!spell.CanCast(target)) return;
+
                 if (spell.IsSkillshot)
                 {
                     if (spell.Collision)
                     {
-                        if (Me.CountEnemyHeroesInRange(spell.Range) <= 2)
+                        if (Me.CountEnemyHeroesInRange(spell.Range) <= (minimunHits == 0 ? 2 : minimunHits))
                         {
                             spell.CastOnBestTarget(0f, true);
                         }
 
-                        if (Me.CountEnemyHeroesInRange(spell.Range) >= 2)
+                        if (Me.CountEnemyHeroesInRange(spell.Range) >= (minimunHits == 0 ? 2 : minimunHits))
                         {
                             spell.CastOnBestTarget(0f, true, 1);
                         }
@@ -79,21 +79,21 @@ namespace Firestorm_AIO.Helpers
                                 {
                                     case SkillshotType.SkillshotLine:
                                         var posLine = spell.GetLineFarmLocation(minions);
-                                        if (posLine.MinionsHit >= 1)
+                                        if (posLine.MinionsHit >= (minimunHits == 0 ? 1 : minimunHits))
                                         {
                                             spell.Cast(posLine.Position);
                                         }
                                         break;
                                     case SkillshotType.SkillshotCircle:
                                         var posCircle = spell.GetCircularFarmLocation(minions);
-                                        if (posCircle.MinionsHit >= 1)
+                                        if (posCircle.MinionsHit >= (minimunHits == 0 ? 1 : minimunHits))
                                         {
                                             spell.Cast(posCircle.Position);
                                         }
                                         break;
                                     case SkillshotType.SkillshotCone:
                                         var posCone = spell.GetLineFarmLocation(minions, spell.Width);
-                                        if (posCone.MinionsHit >= 1)
+                                        if (posCone.MinionsHit >= (minimunHits == 0 ? 1 : minimunHits))
                                         {
                                             spell.Cast(posCone.Position);
                                         }

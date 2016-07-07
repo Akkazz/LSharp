@@ -63,16 +63,16 @@ namespace Firestorm_AIO.Bases
         private bool DrawReady;
 
         private bool DrawQ;
-        private System.Drawing.Color QColor;
+        public System.Drawing.Color QColor;
 
         private bool DrawW;
-        private System.Drawing.Color WColor;
+        public System.Drawing.Color WColor;
 
         private bool DrawE;
-        private System.Drawing.Color EColor;
+        public System.Drawing.Color EColor;
 
         private bool DrawR;
-        private System.Drawing.Color RColor;
+        public System.Drawing.Color RColor;
 
         public void DrawSpell(Spell spell)
         {

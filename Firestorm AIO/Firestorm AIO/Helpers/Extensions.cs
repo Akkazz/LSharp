@@ -48,22 +48,22 @@ namespace Firestorm_AIO.Helpers
 
         public static int CountAllyMinions(this Obj_AI_Base target, int range)
         {
-            return GameObjects.AllyMinions.Count(m => m.IsInRange(Me, range) && m.IsValid);
+            return GameObjects.AllyMinions.Count(m => m.IsInRange(target, range) && m.IsValid);
         }
 
         public static int CountAllyMinions(this Obj_AI_Base target, float range)
         {
-            return GameObjects.AllyMinions.Count(m => m.IsInRange(Me, range) && m.IsValid);
+            return GameObjects.AllyMinions.Count(m => m.IsInRange(target, range) && m.IsValid);
         }
 
         public static int CountAllyMinions(this Vector2 position, float range)
         {
-            return GameObjects.AllyMinions.Count(m => m.IsInRange(Me, range) && m.IsValid);
+            return GameObjects.AllyMinions.Count(m => m.IsInRange(position, range) && m.IsValid);
         }
 
         public static int CountAllyMinions(this Vector3 position, float range)
         {
-            return GameObjects.AllyMinions.Count(m => m.IsInRange(Me, range) && m.IsValid);
+            return GameObjects.AllyMinions.Count(m => m.IsInRange(position.ToVector2(), range) && m.IsValid);
         }
 
         #endregion AllyMinions
@@ -152,15 +152,6 @@ namespace Firestorm_AIO.Helpers
         }
 
         #endregion Vector
-
-        public static bool HasBuffUntil(this Obj_AI_Base target, string name, float time)
-        {
-            return
-                target.Buffs.Any(
-                    b =>
-                        b.IsValid && b.DisplayName.Equals(name) &&
-                        b.EndTime - Game.Time > Me.Distance(target)/time - Game.Ping/2000f);
-        }
 
         #region Damage
 

@@ -1,5 +1,4 @@
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\Firestorm AIO.exe.config
-C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\obj\Debug\Firestorm AIO.csprojResolveAssemblyReference.cache
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\Firestorm AIO.exe
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\Firestorm AIO.pdb
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\clipper_library.dll
@@ -10,5 +9,6 @@ C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\Sha
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\SharpDX.dll
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\bin\Debug\LeagueSharp.Sandbox.dll
+C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\obj\Debug\Firestorm AIO.csprojResolveAssemblyReference.cache
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\obj\Debug\Firestorm AIO.exe
 C:\Users\Mario\Documents\GitHub\LSharp\Firestorm AIO\Firestorm AIO\obj\Debug\Firestorm AIO.pdb

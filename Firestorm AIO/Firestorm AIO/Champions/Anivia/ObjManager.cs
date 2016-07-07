@@ -6,8 +6,8 @@ namespace Firestorm_AIO.Champions.Anivia
 {
     public class ObjManager
     {
-        public static MyObjectBase QObject;
-        public static MyObjectBase RObject;
+        public static GameObject QObject;
+        public static GameObject RObject;
 
         public static void Load()
         {
@@ -17,25 +17,25 @@ namespace Firestorm_AIO.Champions.Anivia
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-            if (sender.Name == "cryo_FlashFrost_Player_mis.troy" && sender.IsAlly)
+            if (sender.Name == "cryo_FlashFrost_Player_mis.troy")
             {
-                QObject = new MyObjectBase(sender.Position);
+                QObject = sender;
             }
 
-            if (sender.Name == "cryo_storm" && sender.IsAlly)
+            if (sender.Name.Contains("cryo_storm"))
             {
-                RObject = new MyObjectBase(sender.Position);
+                RObject = sender;
             }
         }
 
         private static void GameObject_OnDelete(GameObject sender, EventArgs args)
         {
-            if (sender.Name == "cryo_FlashFrost_Player_mis.troy" && sender.IsAlly)
+            if (sender.Name == "cryo_FlashFrost_Player_mis.troy")
             {
                 QObject = null;
             }
 
-            if (sender.Name.Contains("cryo_storm") && sender.IsAlly)
+            if (sender.Name.Contains("cryo_storm"))
             {
                 RObject = null;
             }

@@ -7,7 +7,7 @@ using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
-
+using LeagueSharp.SDK.Utils;
 using static Firestorm_AIO.Champions.Anivia.ObjManager;
 using static Firestorm_AIO.Helpers.Helpers;
 
@@ -16,6 +16,7 @@ namespace Firestorm_AIO.Champions.Anivia
     public class Anivia : Bases.ChampionBase
     {
         private int BreakRange = 1100;
+        private int Q2Range = 200;
 
         public override void Init()
         {
@@ -24,7 +25,7 @@ namespace Firestorm_AIO.Champions.Anivia
             E = new Spell(SpellSlot.E, 600);
             R = new Spell(SpellSlot.R, 750);
 
-            Q.SetSkillshot(0.25f, 110f, 850f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 200f, 850f, false, SkillshotType.SkillshotLine);
             R.SetSkillshot(0.25f, 200f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Q.IsAntiGapCloser();
@@ -54,7 +55,9 @@ namespace Firestorm_AIO.Champions.Anivia
         {
             Target = Variables.TargetSelector.GetTarget(Q.Range, DamageType.Magical);
 
-            if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.CountEnemyHeroesInRange(150) >= 1)
+            if(Target == null)return;
+
+            if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.IsInRange(Target, Q2Range))
             {
                 Q.Cast();
             }
@@ -73,9 +76,9 @@ namespace Firestorm_AIO.Champions.Anivia
             if (GetBoolValue(W, ComboMenu))
             {
                 //Cast Wall behind the target if Q is near
-                if (QObject != null && QObject.Position.IsInRange(Target, 400))
+                if (QObject != null && QObject.Position.IsInRange(Target, 350))
                 {
-                    var pos = Me.Position.Extend(Target.Position, W.Range);
+                    var pos = Me.Position.Extend(Target.Position, Me.Distance(Target) + 120);
                     if (pos.Distance(Me.Position) < W.Range)
                     {
                         W.Cast(pos);
@@ -86,12 +89,12 @@ namespace Firestorm_AIO.Champions.Anivia
             if (GetBoolValue(E, ComboMenu))
             {
                 //Only if snowed
-                if (Target.HasBuffUntil("chilled", 850f))
+                if (Target.HasBuff("chilled"))
                 {
                     E.SmartCast(Target);
                 }
                 //To kill
-                if(Target.CanKillTarget(E, (int)(Me.Distance(Target) / 850f)))
+                if (Target.CanKillTarget(E, (int)(Me.Distance(Target) / 850f)))
                 {
                     E.SmartCast(Target);
                 }
@@ -116,7 +119,7 @@ namespace Firestorm_AIO.Champions.Anivia
             if (GetBoolValue(E, MixedMenu))
             {
                 //Only if snowed
-                if (Target.HasBuffUntil("chilled", 850f))
+                if (Target.HasBuff("chilled"))
                 {
                     E.SmartCast(Target);
                 }
@@ -130,6 +133,18 @@ namespace Firestorm_AIO.Champions.Anivia
 
         public override void LaneClear()
         {
+            if (GetBoolValue(Q, LaneClearMenu))
+            {
+                if (Q.Instance.ToggleState == 1 && QObject == null)
+                {
+                    Q.SmartCast(null, HitChance.Medium, 3);
+                }
+
+                if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.CountEnemyMinions(Q2Range) >= 3)
+                {
+                    Q.Cast();
+                }
+            }
         }
 
         public override void LastHit()
@@ -142,6 +157,15 @@ namespace Firestorm_AIO.Champions.Anivia
 
         public override void Draw()
         {
+            if (QObject != null)
+            {
+                Render.Circle.DrawCircle(QObject.Position, Q2Range, QColor);
+            }
+
+            if (RObject != null)
+            {
+                Render.Circle.DrawCircle(RObject.Position, BreakRange, RColor);
+            }
         }
     }
 }

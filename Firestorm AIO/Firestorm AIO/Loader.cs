@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Firestorm_AIO.Champions.Anivia;
 using Firestorm_AIO.Champions.Illaoi;
 using Firestorm_AIO.Champions.Rumble;
 using Firestorm_AIO.Champions.Yasuo;
@@ -33,6 +34,7 @@ namespace Firestorm_AIO
                     break;
                 //TODO
                 case "Anivia":
+                    new Anivia().Load();
                     break;
                 case "Gnar":
 
