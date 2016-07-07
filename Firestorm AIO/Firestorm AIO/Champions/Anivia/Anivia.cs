@@ -44,6 +44,9 @@ namespace Firestorm_AIO.Champions.Anivia
             R.CreateBool(LaneClearMenu);
             LaneClearMenu.Add(new MenuSlider("rCount", "Only if R will hit X", 3, 0, 9));
 
+            Q.CreateBool(JungleClearMenu);
+            E.CreateBool(JungleClearMenu);
+
             Q.CreateBool(LastHitMenu);
             LastHitMenu.Add(new MenuSlider("qCount", "Only if R will hit X", 1, 0, 9));
             E.CreateBool(LastHitMenu);
@@ -158,6 +161,39 @@ namespace Firestorm_AIO.Champions.Anivia
                 if (GetBoolValue(R, LaneClearMenu) && R.Instance.ToggleState == 1 && RObject == null)
                 {
                     R.SmartCast(R.GetBestLaneClearMinion(), HitChance.High);
+                }
+            }
+
+            //JungleClear
+
+            if (GetBoolValue(Q, JungleClearMenu))
+            {
+                var minionQ = Q.GetBestJungleClearMinion();
+
+                if (Q.Instance.ToggleState == 1 && QObject == null)
+                {
+                    Q.SmartCast(minionQ);
+                }
+
+                if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.IsInRange(minionQ, Q2Range))
+                {
+                    Q.Cast();
+                }
+            }
+
+            if (GetBoolValue(E, JungleClearMenu))
+            {
+                var minionE = E.GetBestJungleClearMinion();
+
+                //Only if snowed
+                if (minionE.HasBuff("chilled"))
+                {
+                    E.SmartCast(minionE);
+                }
+                //To kill
+                if (minionE.CanKillTarget(E, (int)(Me.Distance(Target) / 850f)))
+                {
+                    E.SmartCast(minionE);
                 }
             }
         }

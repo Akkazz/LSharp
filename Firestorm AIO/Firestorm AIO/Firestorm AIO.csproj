@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bases\ChampionBase.cs" />
-    <Compile Include="Bases\MyObjectBase.cs" />
     <Compile Include="Champions\Anivia\Anivia.cs" />
     <Compile Include="Champions\Anivia\ObjManager.cs" />
     <Compile Include="Champions\Illaoi\Illaoi.cs" />
