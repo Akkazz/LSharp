@@ -180,6 +180,21 @@ namespace Firestorm_AIO.Champions.Yasuo
                 Variables.Orbwalker.Orbwalk();
                 CastE(GetBestEscapeE());
             }
+
+            if(Target == null)return;
+            if (GetBoolValue(R, ComboMenu))
+            {
+                if (Target.HealthPercent > Me.HealthPercent - 10 || Me.HealthPercent < 10 || !Target.IsKnockedUp()) return;
+
+                var count = GameObjects.EnemyHeroes.Count(h => h.IsValidTarget(R.Range) && h.IsKnockedUp() && h.Health > R.GetDamage(h));
+
+                var time = GetLowestKnockupTime();
+
+                if (count >= ComboMenu["rCount"] && time < 100 + Game.Ping && time > 0)
+                {
+                    R.Cast();
+                }
+            }
         }
 
         public override void Combo()
@@ -206,13 +221,13 @@ namespace Firestorm_AIO.Champions.Yasuo
             {
                 if (Target.HealthPercent > Me.HealthPercent - 10 || Me.HealthPercent < 10 || !Target.IsKnockedUp()) return;
 
-                var count = GameObjects.EnemyHeroes.Count(h => h.IsValidTarget(R.Range) && h.IsKnockedUp());
+                var count = GameObjects.EnemyHeroes.Count(h => h.IsValidTarget(R.Range) && h.IsKnockedUp() && h.Health > R.GetDamage(h));
 
                 var time = GetLowestKnockupTime();
 
-                if (count >= ComboMenu["rCount"] && time < 50 + Game.Ping && time > 0)
+                if (count >= ComboMenu["rCount"] && time < 100 + Game.Ping && time > 0)
                 {
-                    R.CastOnUnit(Target);
+                    R.Cast();
                 }
             }
         }
