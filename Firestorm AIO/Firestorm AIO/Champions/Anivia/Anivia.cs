@@ -39,7 +39,7 @@ namespace Firestorm_AIO.Champions.Anivia
             R.CreateBool(ComboMenu);
 
             Q.CreateBool(LaneClearMenu);
-            LaneClearMenu.Add(new MenuSlider("qCount", "Only if R will hit X", 3, 0, 9));
+            LaneClearMenu.Add(new MenuSlider("qCount", "Only if Q will hit X", 3, 0, 9));
             E.CreateBool(LaneClearMenu);
             R.CreateBool(LaneClearMenu);
             LaneClearMenu.Add(new MenuSlider("rCount", "Only if R will hit X", 3, 0, 9));
