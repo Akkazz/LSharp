@@ -109,7 +109,7 @@ namespace Firestorm_AIO.Champions.Yasuo
                         m.IsValidTarget(E.Range)).OrderBy(m => m.Distance(Target))
                     .ThenByDescending(m => m.Distance(Me))
                     .ThenBy(m => m.Distance(Game.CursorPos))
-                    .FirstOrDefault();
+                    .FirstOrDefault(m => m.GetPosAfterE().Distance(Target.Position) < Me.Distance(Target));
         }
 
         private static Obj_AI_Base GetBestEscapeE()
@@ -237,7 +237,7 @@ namespace Firestorm_AIO.Champions.Yasuo
                                 m =>
                                     m.IsValidTarget(GetQRange()) &&
                                     Health.GetPrediction(m,
-                                        (int) Q.Delay + (E.IsReady() ? 150 : 0) + Game.Ping) <
+                                        (int) Q.Delay + (E.IsReady() && m.IsSafeToE() ? 150 : 0) + Game.Ping) <
                                     Q.GetDamage(m) + (E.IsReady() && !HasEBuff(m) ? E.GetDamage(m) : 0f));
 
                     if (!HasQ3() && minionQ != null && GetBoolValue(Q, LaneClearMenu)) CastQ(minionQ);
@@ -246,7 +246,7 @@ namespace Firestorm_AIO.Champions.Yasuo
                         GameObjects.EnemyMinions.OrderBy(m => m.Health)
                             .FirstOrDefault(
                                 m =>
-                                    m.IsValidTarget(E.Range) &&
+                                    m.IsValidTarget(E.Range) && m.IsSafeToE() &&
 
                                     Health.GetPrediction(m, 30 + Game.Ping) < E.GetDamage(m));
 

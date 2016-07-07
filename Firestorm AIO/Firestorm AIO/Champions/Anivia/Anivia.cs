@@ -14,7 +14,7 @@ namespace Firestorm_AIO.Champions.Anivia
     {
         private const int BreakRange = 1100;
         private const int Q2Range = 200;
-        private const int R2Range = 400;
+        private const int R2Range = 350;
 
         public override void Init()
         {
@@ -58,6 +58,11 @@ namespace Firestorm_AIO.Champions.Anivia
         public override void Active()
         {
             Target = Variables.TargetSelector.GetTarget(Q.Range, DamageType.Magical);
+
+            if (R.Instance.ToggleState >= 2 && RObject != null && RObject.Position.CountAnyEnemy(R2Range) <= 0)
+            {
+                R.Cast();
+            }
         }
 
         public override void Combo()
@@ -80,7 +85,7 @@ namespace Firestorm_AIO.Champions.Anivia
                 //Cast Wall behind the target if Q is near
                 if (QObject != null && QObject.Position.IsInRange(Target, 350))
                 {
-                    var pos = Me.Position.Extend(Target.Position, Me.Distance(Target) + 120);
+                    var pos = Me.Position.Extend(Target.Position, Me.Distance(Target) + 180);
                     if (pos.Distance(Me.Position) < W.Range)
                     {
                         W.Cast(pos);
@@ -143,6 +148,7 @@ namespace Firestorm_AIO.Champions.Anivia
 
         public override void LaneClear()
         {
+            Game.PrintChat(LaneClearMenu["qCount"].ToString());
             if (GetBoolValue(Q, LaneClearMenu))
             {
                 if (Q.Instance.ToggleState == 1 && QObject == null)
@@ -161,6 +167,11 @@ namespace Firestorm_AIO.Champions.Anivia
                 if (GetBoolValue(R, LaneClearMenu) && R.Instance.ToggleState == 1 && RObject == null)
                 {
                     R.SmartCast(R.GetBestLaneClearMinion(), HitChance.High);
+                }
+
+                if (R.Instance.ToggleState >= 2 && RObject != null && RObject.Position.CountEnemyMinions(R2Range) <= 0)
+                {
+                    R.Cast();
                 }
             }
 
@@ -191,7 +202,7 @@ namespace Firestorm_AIO.Champions.Anivia
                     E.SmartCast(minionE);
                 }
                 //To kill
-                if (minionE.CanKillTarget(E, (int)(Me.Distance(Target) / 850f)))
+                if (minionE.CanKillTarget(E, (int)((Me.Distance(Target) / 850f))*100))
                 {
                     E.SmartCast(minionE);
                 }
