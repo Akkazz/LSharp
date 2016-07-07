@@ -29,6 +29,18 @@ namespace Firestorm_AIO.Champions.Yasuo
             Q3.SetSkillshot(0.3f, 90f, 1200f, false, SkillshotType.SkillshotLine);
 
             DashManager.Load();
+
+            Events.OnGapCloser += Events_OnGapCloser;
+        }
+
+        private void Events_OnGapCloser(object sender, Events.GapCloserEventArgs e)
+        {
+            if (e.Sender.IsAlly) return;
+
+            if (e.IsDirectedToPlayer && HasQ3() && MiscMenu["qGap"])
+            {
+                Q3.CastIfHitchanceMinimum(e.Sender, HitChance.Medium);
+            }
         }
 
         #region Functions
@@ -153,6 +165,8 @@ namespace Firestorm_AIO.Champions.Yasuo
 
             Q.CreateBool(JungleClearMenu);
             E.CreateBool(JungleClearMenu);
+
+            MiscMenu.Add(new MenuBool("qGap", "Use Q3 on gapclosers", true));
         }
 
         #region Modes

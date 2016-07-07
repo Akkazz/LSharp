@@ -3,6 +3,7 @@ using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using SharpDX;
+
 using static Firestorm_AIO.Helpers.Helpers;
 
 namespace Firestorm_AIO.Champions.Yasuo

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.UI;
 using LeagueSharp.SDK.Utils;
 using SharpDX;
-using Color = System.Drawing.Color;
+
 using static Firestorm_AIO.Helpers.Helpers;
 
 namespace Firestorm_AIO.Helpers
@@ -159,12 +155,14 @@ namespace Firestorm_AIO.Helpers
         {
             var predictedHealth = Health.GetPrediction(target,
                 customDelay == 0 ? (int) (spell.Delay*1000f) : customDelay);
+
             return predictedHealth < spell.GetDamage(target) && predictedHealth >= Me.GetAutoAttackDamage(target);
         }
 
         public static bool CanKillTarget(this Obj_AI_Base target, float damage, int delay)
         {
             var predictedHealth = Health.GetPrediction(target, (int) (delay*1000f));
+
             return predictedHealth < damage && predictedHealth >= Me.GetAutoAttackDamage(target);
         }
 

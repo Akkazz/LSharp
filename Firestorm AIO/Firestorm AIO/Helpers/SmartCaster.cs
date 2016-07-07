@@ -2,24 +2,13 @@
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
+
 using static Firestorm_AIO.Helpers.Helpers;
 
 namespace Firestorm_AIO.Helpers
 {
     public static class SmartCaster
     {
-        #region GetTarget
-
-        public static Obj_AI_Minion GetBestLastHitMinion(this Spell spell)
-        {
-            return
-                GameObjects.EnemyMinions.Where(m => m.IsValidTarget(spell.Range))
-                    .OrderBy(m => m.Health)
-                    .FirstOrDefault(m => Health.GetPrediction(m, (int) spell.Delay*1000) < spell.GetDamage(m));
-        }
-
-        #endregion GetTarget
-
         public static void SmartCast(this Spell spell, Obj_AI_Base target = null, HitChance hitchance = HitChance.Medium, int minimunHits = 0)
         {
             var orbMode = Variables.Orbwalker.GetActiveMode();

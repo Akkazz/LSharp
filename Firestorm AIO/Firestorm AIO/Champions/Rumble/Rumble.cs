@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Firestorm_AIO.Helpers;
+﻿using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
+
+using static Firestorm_AIO.Helpers.Helpers;
 
 namespace Firestorm_AIO.Champions.Rumble
 {

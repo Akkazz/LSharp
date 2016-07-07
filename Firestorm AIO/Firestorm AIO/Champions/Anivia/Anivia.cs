@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Firestorm_AIO.Helpers;
+﻿using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
+using LeagueSharp.SDK.UI;
 using LeagueSharp.SDK.Utils;
+
 using static Firestorm_AIO.Champions.Anivia.ObjManager;
 using static Firestorm_AIO.Helpers.Helpers;
 
@@ -15,8 +12,9 @@ namespace Firestorm_AIO.Champions.Anivia
 {
     public class Anivia : Bases.ChampionBase
     {
-        private int BreakRange = 1100;
-        private int Q2Range = 200;
+        private const int BreakRange = 1100;
+        private const int Q2Range = 200;
+        private const int R2Range = 400;
 
         public override void Init()
         {
@@ -41,10 +39,13 @@ namespace Firestorm_AIO.Champions.Anivia
             R.CreateBool(ComboMenu);
 
             Q.CreateBool(LaneClearMenu);
+            LaneClearMenu.Add(new MenuSlider("qCount", "Only if R will hit X", 3, 0, 9));
             E.CreateBool(LaneClearMenu);
             R.CreateBool(LaneClearMenu);
+            LaneClearMenu.Add(new MenuSlider("rCount", "Only if R will hit X", 3, 0, 9));
 
             Q.CreateBool(LastHitMenu);
+            LastHitMenu.Add(new MenuSlider("qCount", "Only if R will hit X", 1, 0, 9));
             E.CreateBool(LastHitMenu);
 
             Q.CreateBool(MixedMenu);
@@ -54,13 +55,6 @@ namespace Firestorm_AIO.Champions.Anivia
         public override void Active()
         {
             Target = Variables.TargetSelector.GetTarget(Q.Range, DamageType.Magical);
-
-            if(Target == null)return;
-
-            if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.IsInRange(Target, Q2Range))
-            {
-                Q.Cast();
-            }
         }
 
         public override void Combo()
@@ -70,6 +64,11 @@ namespace Firestorm_AIO.Champions.Anivia
                 if (Q.Instance.ToggleState == 1 && QObject == null)
                 {
                     Q.SmartCast(Target, HitChance.High);
+                }
+
+                if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.IsInRange(Target, Q2Range))
+                {
+                    Q.Cast();
                 }
             }
 
@@ -102,7 +101,15 @@ namespace Firestorm_AIO.Champions.Anivia
 
             if (GetBoolValue(R, ComboMenu))
             {
-                R.SmartCast(Target, HitChance.High);
+                if (R.Instance.ToggleState == 1 && RObject == null && !Target.HasBuff("chilled"))
+                {
+                    R.SmartCast(Target, HitChance.High);
+                }
+
+                if (R.Instance.ToggleState >= 2 && RObject != null && RObject.Position.CountEnemyHeroesInRange(R2Range) <= 0)
+                {
+                    R.Cast();
+                }
             }
         }
 
@@ -137,18 +144,35 @@ namespace Firestorm_AIO.Champions.Anivia
             {
                 if (Q.Instance.ToggleState == 1 && QObject == null)
                 {
-                    Q.SmartCast(null, HitChance.Medium, 3);
+                    Q.SmartCast(null, HitChance.Medium, LaneClearMenu["qCount"]);
                 }
 
-                if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.CountEnemyMinions(Q2Range) >= 3)
+                if (Q.Instance.ToggleState >= 2 && QObject != null && QObject.Position.CountEnemyMinions(Q2Range) >= LaneClearMenu["qCount"])
                 {
                     Q.Cast();
+                }
+            }
+
+            if (GetBoolValue(R, LaneClearMenu))
+            {
+                if (GetBoolValue(R, LaneClearMenu) && R.Instance.ToggleState == 1 && RObject == null)
+                {
+                    R.SmartCast(R.GetBestLaneClearMinion(), HitChance.High);
                 }
             }
         }
 
         public override void LastHit()
         {
+            if (GetBoolValue(Q, LastHitMenu))
+            {
+                Q.SmartCast(Q.GetBestLastHitMinion(), HitChance.Medium, LastHitMenu["qCount"]);
+            }
+
+            if (GetBoolValue(E, LastHitMenu))
+            {
+                E.SmartCast(E.GetBestLastHitMinion());
+            }
         }
 
         public override void KillSteal()
