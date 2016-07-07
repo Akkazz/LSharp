@@ -48,7 +48,7 @@ namespace Firestorm_AIO.Champions.Anivia
             E.CreateBool(JungleClearMenu);
 
             Q.CreateBool(LastHitMenu);
-            LastHitMenu.Add(new MenuSlider("qCount", "Only if Q will hit X", 1, 0, 9));
+            LastHitMenu.Add(new MenuSlider("qCount", "Only if Q will hit X", 3, 0, 9));
             E.CreateBool(LastHitMenu);
 
             Q.CreateBool(MixedMenu);
