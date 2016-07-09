@@ -12,7 +12,9 @@ namespace Firestorm_AIO.Helpers
         public static void SmartCast(this Spell spell, Obj_AI_Base target = null, HitChance hitchance = HitChance.Medium,
             int minimunHits = 0)
         {
-            if (target == null || !spell.CanCast(target)) return;
+            if(target == null)return;
+
+            if (!spell.CanCast(target)) return;
 
             var orbMode = Variables.Orbwalker.GetActiveMode();
 

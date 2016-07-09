@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Firestorm_AIO.Champions.Anivia;
 using Firestorm_AIO.Champions.Illaoi;
+using Firestorm_AIO.Champions.LeBlanc;
+using Firestorm_AIO.Champions.NidaLee;
 using Firestorm_AIO.Champions.Rumble;
 using Firestorm_AIO.Champions.Yasuo;
 using LeagueSharp;
@@ -23,19 +25,30 @@ namespace Firestorm_AIO
 
             switch (ObjectManager.Player.ChampionName)
             {
-                case "Yasuo":
-                    new Yasuo().Load();
-                    break;
-                case "Rumble":
-                    new Rumble().Load();
-                    break;
-                case "Illaoi":
-                    new Illaoi().Load();
-                    break;
-                //TODO
                 case "Anivia":
                     new Anivia().Load();
                     break;
+
+                case "Nidalee":
+                    new NidaLee().Load();
+                    break;
+
+                case "LeBlanc":
+                    new LeBlanc().Load();
+                    break;
+
+                case "Rumble":
+                    new Rumble().Load();
+                    break;
+
+                case "Illaoi":
+                    new Illaoi().Load();
+                    break;
+
+                case "Yasuo":
+                    new Yasuo().Load();
+                    break;
+                //TODO
                 case "Gnar":
 
                     break;
