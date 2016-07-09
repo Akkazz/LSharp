@@ -19,6 +19,9 @@ namespace Firestorm_AIO
         {
             #region Common Stuff
 
+            Ultilities.Activator.Activator.Load();
+            Ultilities.Tracker.Tracker.Load();
+
             Helpers.AntiGapcloser.Load();
 
             #endregion Common Stuff
