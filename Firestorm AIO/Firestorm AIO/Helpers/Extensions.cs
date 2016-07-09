@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.UI;
@@ -11,23 +12,29 @@ namespace Firestorm_AIO.Helpers
 {
     public static class Extensions
     {
+        public static Obj_AI_Base GetNearestTower(this Obj_AI_Base target)
+        {
+            return GameObjects.EnemyTurrets.OrderBy(t => t.Distance(target)).FirstOrDefault(t => t.Health > 0 && t.IsValid && !t.IsDead);
+        }
+
+        #region bools
+
         public static bool IsKnockedUp(this Obj_AI_Base target)
         {
             return target.HasBuffOfType(BuffType.Knockup) || target.HasBuffOfType(BuffType.Knockback);
         }
 
-        public static Obj_AI_Base GetNearestTower(this Obj_AI_Base target)
-        {
-            return
-                GameObjects.EnemyTurrets.OrderBy(t => t.Distance(target))
-                    .FirstOrDefault(t => t.Health > 0 && t.IsValid && !t.IsDead);
-        }
-
         public static bool IsUnderTower(this Vector3 position)
         {
-            return
-                GameObjects.EnemyTurrets.Where(a => a.Health > 0 && !a.IsDead).Any(a => a.Distance(position) <= 1000);
+            return GameObjects.EnemyTurrets.Where(a => a.Health > 0 && !a.IsDead).Any(a => a.Distance(position) <= 1000);
         }
+
+        public static bool IsKillable(this Obj_AI_Base target, Spell spell)
+        {
+            return spell.GetDamage(target) >= Health.GetPrediction(target, spell.TravelTime(target));
+        }
+
+        #endregion bools
 
         #region Menus
 
@@ -177,19 +184,62 @@ namespace Firestorm_AIO.Helpers
 
         public static bool CanKillTarget(this Obj_AI_Base target, Spell spell, int customDelay = 0)
         {
-            var predictedHealth = Health.GetPrediction(target,
-                customDelay == 0 ? (int) (spell.Delay*1000f) : customDelay);
+            var predictedHealth = Health.GetPrediction(target, customDelay == 0 ? (int)(spell.Delay * 1000f) : customDelay);
 
             return predictedHealth < spell.GetDamage(target) && predictedHealth >= Me.GetAutoAttackDamage(target);
         }
 
         public static bool CanKillTarget(this Obj_AI_Base target, float damage, int delay)
         {
-            var predictedHealth = Health.GetPrediction(target, (int) (delay*1000f));
+            var predictedHealth = Health.GetPrediction(target, (int)(delay * 1000f));
 
             return predictedHealth < damage && predictedHealth >= Me.GetAutoAttackDamage(target);
         }
 
         #endregion Damage
+
+        #region Times
+
+        public static int TravelTime(this Spell spell, Obj_AI_Base target)
+        {
+            return (int)((target.DistanceToPlayer() / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Obj_AI_Base From, Obj_AI_Base To)
+        {
+            return (int)((From.Distance(To) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Vector2 From, Vector2 To)
+        {
+            return (int)((From.Distance(To) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Vector3 From, Vector3 To)
+        {
+            return (int)((From.Distance(To) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Obj_AI_Base From, Vector3 To)
+        {
+            return (int)((From.Distance(To) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Vector3 From, Obj_AI_Base To)
+        {
+            return (int)((From.Distance(To.ServerPosition) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Obj_AI_Base From, Vector2 To)
+        {
+            return (int)((From.Distance(To) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        public static int TravelTime(this Spell spell, Vector2 From, Obj_AI_Base To)
+        {
+            return (int)((From.Distance(To.ServerPosition) / spell.Speed) + (Math.Abs(spell.Delay + Game.Ping)));
+        }
+
+        #endregion Times
     }
 }

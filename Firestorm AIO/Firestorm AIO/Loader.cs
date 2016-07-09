@@ -10,6 +10,7 @@ using Firestorm_AIO.Champions.NidaLee;
 using Firestorm_AIO.Champions.Rumble;
 using Firestorm_AIO.Champions.Yasuo;
 using LeagueSharp;
+using LeagueSharp.SDK;
 
 namespace Firestorm_AIO
 {
@@ -65,7 +66,7 @@ namespace Firestorm_AIO
 
                     break;
                 default:
-                    Game.PrintChat("Champion not supported in FireStorm AIO");
+                    Game.PrintChat(GameObjects.Player.ChampionName + " not supported in FireStorm AIO");
                     break;
             }
         }
