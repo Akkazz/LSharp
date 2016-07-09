@@ -14,10 +14,10 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -76,6 +76,7 @@
     <Compile Include="DataBases\Champions.cs" />
     <Compile Include="DataBases\Items.cs" />
     <Compile Include="DataBases\Spells.cs" />
+    <Compile Include="DataBases\SummonerSpells.cs" />
     <Compile Include="Enums\Champions.cs" />
     <Compile Include="Helpers\AntiGapcloser.cs" />
     <Compile Include="Helpers\Extensions.cs" />

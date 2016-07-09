@@ -8,7 +8,7 @@ using static LeagueSharp.SDK.Items;
 
 namespace Firestorm_AIO.DataBases
 {
-    class Items
+    public static class Items
     {
         #region WardingItems
 

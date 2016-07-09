@@ -19,7 +19,7 @@ namespace Firestorm_AIO
         public static void Load()
         {
             #region Common Stuff
-
+            
             Ultilities.Activator.Activator.Load();
             Ultilities.Tracker.Tracker.Load();
 
