@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bases\ChampionBase.cs" />
+    <Compile Include="Bases\SpellBase.cs" />
     <Compile Include="Champions\Anivia\Anivia.cs" />
     <Compile Include="Champions\Anivia\ObjManager.cs" />
     <Compile Include="Champions\Illaoi\Illaoi.cs" />
@@ -72,6 +73,10 @@
     <Compile Include="Champions\Rumble\Rumble.cs" />
     <Compile Include="Champions\Yasuo\DashManager.cs" />
     <Compile Include="Champions\Yasuo\Yasuo.cs" />
+    <Compile Include="DataBases\Champions.cs" />
+    <Compile Include="DataBases\Items.cs" />
+    <Compile Include="DataBases\Spells.cs" />
+    <Compile Include="Enums\Champions.cs" />
     <Compile Include="Helpers\AntiGapcloser.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Helpers.cs" />
@@ -83,9 +88,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataBases\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

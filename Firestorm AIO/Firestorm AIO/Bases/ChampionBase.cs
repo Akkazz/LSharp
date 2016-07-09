@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using Firestorm_AIO.DataBases;
+using Firestorm_AIO.Enums;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
@@ -7,7 +9,6 @@ using LeagueSharp.SDK.UI;
 using LeagueSharp.SDK.Utils;
 
 using Color = SharpDX.Color;
-
 using static Firestorm_AIO.Helpers.Helpers;
 using Menu = LeagueSharp.SDK.UI.Menu;
 
@@ -17,6 +18,7 @@ namespace Firestorm_AIO.Bases
     public abstract class ChampionBase
     {
         public static Obj_AI_Hero Target;
+        public static Champion MyChampion = Me.GetChampion();
 
         public static bool HasMana = true;
         public static bool FleeKey;
