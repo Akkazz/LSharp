@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Bases\ChampionBase.cs" />
     <Compile Include="Bases\SpellBase.cs" />
+    <Compile Include="Bases\SpellDangerBase.cs" />
     <Compile Include="Champions\Anivia\Anivia.cs" />
     <Compile Include="Champions\Anivia\ObjManager.cs" />
     <Compile Include="Champions\Illaoi\Illaoi.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Champions\Yasuo\Yasuo.cs" />
     <Compile Include="DataBases\Champions.cs" />
     <Compile Include="DataBases\Items.cs" />
+    <Compile Include="DataBases\SpellDanger.cs" />
     <Compile Include="DataBases\Spells.cs" />
     <Compile Include="DataBases\SummonerSpells.cs" />
     <Compile Include="Enums\Champions.cs" />

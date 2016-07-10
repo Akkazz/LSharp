@@ -16,6 +16,7 @@ namespace Firestorm_AIO.DataBases
             //Special Cases
             switch (hero.ChampionName)
             {
+                //TODO FIX ALL EXCEPTIONS
                 case "Aurelion Sol":
                     return Champion.AurelionSol;
                 case "Cho'Gath":

@@ -173,6 +173,16 @@ namespace Firestorm_AIO.Helpers
             return target.Distance(from.Position) < range;
         }
 
+        public static bool IsInRange(this GameObject target, Obj_AI_Base from, float range)
+        {
+            return target.Distance(from.Position) < range;
+        }
+
+        public static bool IsInRange(this GameObject target, Vector3 from, float range)
+        {
+            return target.Distance(from) < range;
+        }
+
         public static bool IsInAARange(this Obj_AI_Base target, int plusRange = 0)
         {
             return target.Distance(Me) < Me.GetRealAutoAttackRange() + 0;
