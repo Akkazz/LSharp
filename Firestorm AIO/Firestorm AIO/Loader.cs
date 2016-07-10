@@ -9,21 +9,29 @@ using Firestorm_AIO.Champions.LeBlanc;
 using Firestorm_AIO.Champions.NidaLee;
 using Firestorm_AIO.Champions.Rumble;
 using Firestorm_AIO.Champions.Yasuo;
+using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
+using LeagueSharp.SDK.UI;
+
+using static Firestorm_AIO.Helpers.Helpers;
 
 namespace Firestorm_AIO
 {
     internal class Loader
     {
+        public static Menu MainMenu;
+
         public static void Load()
         {
             #region Common Stuff
-            
-            Ultilities.Activator.Activator.Load();
-            Ultilities.Tracker.Tracker.Load();
 
-            Helpers.AntiGapcloser.Load();
+            MainMenu = new Menu("aioFire" + Me.ChampionName, "Firestorm AIO: " + Me.ChampionName, true).Attach();
+            MainMenu.CreateSeparator("a", "Firestorm AIO");
+            
+            Ultilities.Init.Load();
+
+            AntiGapcloser.Load();
 
             #endregion Common Stuff
 

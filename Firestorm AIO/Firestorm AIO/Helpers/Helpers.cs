@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.SDK;
 
@@ -36,5 +37,19 @@ namespace Firestorm_AIO.Helpers
                     .OrderBy(m => m.Health)
                     .FirstOrDefault(m => m.CanKillTarget(spell));
         }
+
+        #region Lists
+
+        public static Dictionary<BuffType, bool> DeBuffs = new Dictionary<BuffType, bool>()
+                                                               {
+                                                                   { BuffType.AttackSpeedSlow, false }, { BuffType.Blind, true }, { BuffType.Charm, true }, { BuffType.Disarm, false },
+                                                                   { BuffType.Fear, true }, { BuffType.Knockback, true }, { BuffType.Knockup, true }, { BuffType.NearSight, false },
+                                                                   { BuffType.Poison, false }, { BuffType.Polymorph, false }, { BuffType.Silence, true }, { BuffType.Slow, false },
+                                                                   { BuffType.Snare, true }, { BuffType.Stun, true }, { BuffType.Suppression, true }, { BuffType.Taunt, true }
+                                                               };
+
+        public static string[] JungleMobs;
+
+        #endregion Lists
     }
 }

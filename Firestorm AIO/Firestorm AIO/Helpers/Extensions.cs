@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 using LeagueSharp;
 using LeagueSharp.SDK;
+using LeagueSharp.SDK.Enumerations;
 using LeagueSharp.SDK.UI;
 using LeagueSharp.SDK.Utils;
 using SharpDX;
 
 using static Firestorm_AIO.Helpers.Helpers;
+using Menu = LeagueSharp.SDK.UI.Menu;
 
 namespace Firestorm_AIO.Helpers
 {
@@ -18,6 +21,16 @@ namespace Firestorm_AIO.Helpers
         }
 
         #region bools
+
+        public static bool ItemReady(this Items.Item item)
+        {
+            return item != null && item.IsOwned(Me) && item.IsReady;
+        }
+
+        public static bool SummonerReady(this Spell spell)
+        {
+            return spell != null && spell.IsReady();
+        }
 
         public static bool IsKnockedUp(this Obj_AI_Base target)
         {
@@ -37,6 +50,37 @@ namespace Firestorm_AIO.Helpers
         #endregion bools
 
         #region Menus
+
+        public static Menu CreateMenu(this Menu menu, string id, string Name, bool root = false, string uniquestring = "")
+        {
+            var mewmenu = new Menu(id, Name, root, uniquestring);
+            return menu.Add(mewmenu);
+        }
+
+        public static MenuBool CreateBool(this Menu menu, string id, string Name, bool value = true, string uniquestring = "")
+        {
+            return menu.Add(new MenuBool(id, Name, value, uniquestring));
+        }
+
+        public static MenuSliderButton CreateSliderButton(this Menu menu, string id, string Name, int dValue = 0, int minValue = 0, int maxValue = 100, bool bValue = true, string uniquestring = "")
+        {
+            return menu.Add(new MenuSliderButton(id, Name, dValue, minValue, maxValue, bValue, uniquestring));
+        }
+
+        public static MenuSlider CreateSlider(this Menu menu, string id, string Name, int dValue = 0, int minValue = 0, int maxValue = 100, string uniquestring = "")
+        {
+            return menu.Add(new MenuSlider(id, Name, dValue, minValue, maxValue, uniquestring));
+        }
+
+        public static MenuKeyBind CreateKeyBind(this Menu menu, string id, string Name, Keys key, KeyBindType type, string uniquestring = "")
+        {
+            return menu.Add(new MenuKeyBind(id, Name, key, type));
+        }
+
+        public static MenuSeparator CreateSeparator(this Menu menu, string id, string Name)
+        {
+            return menu.Add(new MenuSeparator(id, Name));
+        }
 
         public static void CreateBool(this Spell spell, Menu menu, bool defaultValue = true)
         {
