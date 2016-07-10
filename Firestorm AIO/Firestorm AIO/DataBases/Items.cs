@@ -59,8 +59,7 @@ namespace Firestorm_AIO.DataBases
         #endregion ADItems
 
         #region APItems
-
-        public static Item Zhonyas = new Item(ItemId.Zhonyas_Hourglass, 0);
+        
         public static Item Hextech_Gunblade = new Item(ItemId.Hextech_Gunblade, 600);
         public static Item Hextech_ProtoBelt = new Item(ItemId.Will_of_the_Ancients, 600);
         public static Item Hextech_GLP = new Item(3030, 600);
@@ -69,16 +68,17 @@ namespace Firestorm_AIO.DataBases
 
         #region Potions
 
-        public static Item CorruptingPotion = new Item(2033, 0);
         public static Item HealthPotion = new Item(ItemId.Health_Potion, 0);
-        public static Item HuntersPotion = new Item(2032, 0);
-        public static Item RefillablePotion = new Item(2031, 0);
         public static Item Biscuit = new Item(2010, 0);
+        public static Item RefillablePotion = new Item(2031, 0);
+        public static Item CorruptingPotion = new Item(2033, 0);
+        public static Item HuntersPotion = new Item(2032, 0);
 
         #endregion Potions
 
         #region TankItems
 
+        public static Item Zhonyas = new Item(ItemId.Zhonyas_Hourglass, 0);
         public static Item Solari = new Item(ItemId.Locket_of_the_Iron_Solari, 600);
         public static Item Randuins = new Item(ItemId.Randuins_Omen, 450);
 

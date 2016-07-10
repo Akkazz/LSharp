@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Firestorm_AIO.DataBases;
 using Firestorm_AIO.Enums;
+using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
 using LeagueSharp.SDK.Enumerations;
@@ -51,7 +52,7 @@ namespace Firestorm_AIO.Bases
 
         #region Menus
 
-        public Menu MainMenu;
+        public Menu ChampionMenu;
         public Menu ComboMenu;
         public Menu MixedMenu;
         public Menu LaneClearMenu;
@@ -111,12 +112,12 @@ namespace Firestorm_AIO.Bases
         #region Functions
         public bool GetBoolValue(Spell spell, Menu menu)
         {
-            return MainMenu[menu.Name]["use" + spell.Slot];
+            return ChampionMenu[menu.Name]["use" + spell.Slot];
         }
 
         public bool GetBoolValue(string name, Menu menu)
         {
-            return MainMenu[menu.Name][name];
+            return ChampionMenu[menu.Name][name];
         }
 
         #endregion Functions
@@ -127,14 +128,15 @@ namespace Firestorm_AIO.Bases
 
             #region InitialMenu
 
-            MainMenu = new Menu("aioFire" + Me.ChampionName, "Firestorm AIO: " + Me.ChampionName, true).Attach();
-            ComboMenu = MainMenu.Add(new Menu("comboMenu" + Me.ChampionName, "Combo Menu"));
-            MixedMenu = MainMenu.Add(new Menu("mixedMenu" + Me.ChampionName, "Mixed Menu"));
-            LaneClearMenu = MainMenu.Add(new Menu("laneMenu" + Me.ChampionName, "LaneClear Menu"));
-            JungleClearMenu = MainMenu.Add(new Menu("jungleMenu" + Me.ChampionName, "JungleClear Menu"));
-            LastHitMenu = MainMenu.Add(new Menu("lastMenu" + Me.ChampionName, "LastHit Menu"));
-            KillstealMenu = MainMenu.Add(new Menu("ksMenu" + Me.ChampionName, "KillSteal Menu"));
-            DrawingMenu = MainMenu.Add(new Menu("drawMenu" + Me.ChampionName, "Drawing Menu"));
+            ChampionMenu = Loader.MainMenu.Add(new Menu(Me.ChampionName + "Menu", Me.ChampionName + " Menu"));
+            ChampionMenu.CreateSeparator("a", Me.ChampionName);
+            ComboMenu = ChampionMenu.Add(new Menu("comboMenu" + Me.ChampionName, "Combo Menu"));
+            MixedMenu = ChampionMenu.Add(new Menu("mixedMenu" + Me.ChampionName, "Mixed Menu"));
+            LaneClearMenu = ChampionMenu.Add(new Menu("laneMenu" + Me.ChampionName, "LaneClear Menu"));
+            JungleClearMenu = ChampionMenu.Add(new Menu("jungleMenu" + Me.ChampionName, "JungleClear Menu"));
+            LastHitMenu = ChampionMenu.Add(new Menu("lastMenu" + Me.ChampionName, "LastHit Menu"));
+            KillstealMenu = ChampionMenu.Add(new Menu("ksMenu" + Me.ChampionName, "KillSteal Menu"));
+            DrawingMenu = ChampionMenu.Add(new Menu("drawMenu" + Me.ChampionName, "Drawing Menu"));
 
             var drawReady = DrawingMenu.Add(new MenuBool("drawReady", "Only draw spell if it is ready"));
             DrawReady = drawReady.Value;
@@ -144,7 +146,7 @@ namespace Firestorm_AIO.Bases
             };
             DrawingMenu.Add(new MenuSeparator("separator1", "   "));
 
-            MiscMenu = MainMenu.Add(new Menu("miscMenu" + Me.ChampionName, "Misc Menu"));
+            MiscMenu = ChampionMenu.Add(new Menu("miscMenu" + Me.ChampionName, "Misc Menu"));
 
             if (HasMana)
             {
