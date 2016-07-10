@@ -13,17 +13,10 @@ namespace Firestorm_AIO.Ultilities.Activator
     public static class ActivatorEvents
     {
         #region EventsStuff
-<<<<<<< HEAD
 
         public delegate void OnDanderEventHandler(Obj_AI_Base sender, EventArgs args);
 
         public static event OnDanderEventHandler OnDanger;
-
-=======
-        public delegate void OnDangerEventHandler(Obj_AI_Base sender, EventArgs args);
-
-        public static event OnDangerEventHandler OnDanger;
->>>>>>> origin/master
         #endregion EventsStuff
 
         public static void Load()
