@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Firestorm_AIO.Bases;
 using Firestorm_AIO.DataBases;
-using Firestorm_AIO.Enums;
 using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
@@ -22,13 +18,13 @@ namespace Firestorm_AIO.Ultilities.Activator
         {
             public int DangerLevel { get; private set; }
             public SpellSlot Slot { get; private set; }
-            public Champion Champion { get; private set; }
+            public Obj_AI_Hero Target { get; private set; }
 
-            public OnDangerEventArgs(int dangerLevel, SpellSlot slot, Champion champ)
+            public OnDangerEventArgs(int dangerLevel, SpellSlot slot, Obj_AI_Hero target)
             {
                 DangerLevel = dangerLevel;
                 Slot = slot;
-                Champion = champ;
+                Target = target;
             }
         }
 
@@ -55,7 +51,7 @@ namespace Firestorm_AIO.Ultilities.Activator
 
         private static void Obj_AI_Base_OnBuffAdd(Obj_AI_Base sender, Obj_AI_BaseBuffAddEventArgs args)
         {
-            if (sender == null || sender.IsAlly) return;
+            if (sender == null || !sender.IsAlly) return;
 
             if (!BuffsDictionary.ContainsKey(sender.Name))
                 BuffsDictionary.Add(sender.Name, args.Buff.Type);
@@ -63,7 +59,7 @@ namespace Firestorm_AIO.Ultilities.Activator
 
         private static void Obj_AI_Base_OnBuffRemove(Obj_AI_Base sender, Obj_AI_BaseBuffRemoveEventArgs args)
         {
-            if (sender == null || sender.IsAlly) return;
+            if (sender == null || !sender.IsAlly) return;
 
             if (BuffsDictionary.ContainsKey(sender.Name))
                 BuffsDictionary.Remove(sender.Name);
@@ -71,7 +67,7 @@ namespace Firestorm_AIO.Ultilities.Activator
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            if (OnDanger == null || Me.IsDead) return;
+            if (OnDanger == null) return;
 
             foreach (var hero in GameObjects.Heroes)
             {
@@ -86,17 +82,16 @@ namespace Firestorm_AIO.Ultilities.Activator
                     var targettedInfo = TargetteSpells.First();
                     if (targettedInfo.Target != null)
                     {
-                        
+                        OnDanger.Invoke(targettedInfo.Sender,
+                            new OnDangerEventArgs(targettedInfo.DangerLevel, targettedInfo.Slot, targettedInfo.Target));
                     }
                 }
-
-
             }
         }
 
         #region Extensions
 
-        private static OnDangerEventArgs GetMissileInfo(this Obj_AI_Base target)
+        private static OnDangerEventArgs GetMissileInfo(this Obj_AI_Hero target)
         {
             //Missiles
             var missile = Missiles.FirstOrDefault(m => m.IsInRange(target, 3000) && m.IsValid);
@@ -150,7 +145,7 @@ namespace Firestorm_AIO.Ultilities.Activator
 
                     if (dangerLevel != 0)
                     {
-                        return new OnDangerEventArgs(dangerLevel, missile.Slot, champion.GetChampion());
+                        return new OnDangerEventArgs(dangerLevel, missile.Slot, target);
                     }
                 }
             }
@@ -159,12 +154,14 @@ namespace Firestorm_AIO.Ultilities.Activator
 
         #endregion Extensions
 
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private static List<TargetteSpell> TargetteSpells = new List<TargetteSpell>();
 
-        private struct TargetteSpell
+        public struct TargetteSpell
         {
             public Obj_AI_Hero Target;
             public Obj_AI_Hero Sender;
+            public SpellSlot Slot;
             public int DangerLevel;
         }
 
@@ -209,20 +206,29 @@ namespace Firestorm_AIO.Ultilities.Activator
                     break;
             }
 
-            
-            if (dangerLevel != 0)
+
+            if (dangerLevel == 0) return;
+
+            var targSpell = new TargetteSpell
             {
-                var targSpell = new TargetteSpell {DangerLevel = dangerLevel, Sender = champion, Target = target};
+                DangerLevel = dangerLevel,
+                Sender = champion,
+                Target = target,
+                Slot = args.Slot
+            };
 
-                TargetteSpells.Add(targSpell);
-                DelayAction.Add(args.Start.Distance(args.End) / args.SData.MissileSpeed, () => TargetteSpells.Remove(targSpell));
-            }
+            TargetteSpells.Add(targSpell);
+
+            var delay = args.SData.MissileSpeed <= 0
+                ? args.Start.Distance(args.End)/args.SData.MissileSpeed*1000
+                : 300;
+
+            DelayAction.Add(delay, () => TargetteSpells.Remove(targSpell));
         }
-
-
 
         #region Missiles Stuff
 
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private static List<MissileClient> Missiles = new List<MissileClient>();
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
