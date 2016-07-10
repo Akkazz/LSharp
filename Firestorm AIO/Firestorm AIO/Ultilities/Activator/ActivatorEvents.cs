@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Firestorm_AIO.Bases;
+using Firestorm_AIO.DataBases;
+using Firestorm_AIO.Enums;
 using Firestorm_AIO.Helpers;
 using LeagueSharp;
 using LeagueSharp.SDK;
@@ -14,7 +17,7 @@ namespace Firestorm_AIO.Ultilities.Activator
     {
         #region EventsStuff
 
-        public delegate void OnDanderEventHandler(Obj_AI_Base sender, EventArgs args);
+        public delegate void OnDanderEventHandler(Obj_AI_Base sender, OnDangerEventArgs args);
 
         public static event OnDanderEventHandler OnDanger;
         #endregion EventsStuff
@@ -51,25 +54,19 @@ namespace Firestorm_AIO.Ultilities.Activator
         {
             if (OnDanger == null || Me.IsDead) return;
 
-            foreach (var eHero in GameObjects.EnemyHeroes)
+            foreach (var hero in GameObjects.Heroes)
             {
-                /*
-                if (eHero.IsMissileNear())
-                {
-                    
-                }
-                */
+                var missileInfo = hero.GetMissileInfo();
+
+                if(missileInfo == null)return;
+
+                OnDanger.Invoke(hero, missileInfo);
             }
         }
-        /*
-        #region Extensions
         
-        private struct MyStruct
-        {
-            
-        }
+        #region Extensions
 
-        private static bool IsMissileNear(this Obj_AI_Base target)
+        private static OnDangerEventArgs GetMissileInfo(this Obj_AI_Base target)
         {
             //Missiles
             var missile = Missiles.FirstOrDefault(m => m.IsInRange(target, 3000) && m.IsValid);
@@ -81,52 +78,57 @@ namespace Firestorm_AIO.Ultilities.Activator
 
             if (champion != null)
             {
-                var spell1 =
-                    missile.SpellCaster.Spellbook.Spells.FirstOrDefault(
-                        s => s.Name.ToLower().Equals(missile.SData.Name.ToLower()));
-
-                var spell2 =
-                    missile.SpellCaster.Spellbook.Spells.FirstOrDefault(
-                        s => (s.Name.ToLower() + "missile").Equals(missile.SData.Name.ToLower()));
-
-                var slot = SpellSlot.Unknown;
-                if (spell1 != null)
-                {
-                    slot = spell1.Slot;
-                }
-                else if (spell2 != null)
-                {
-                    slot = spell2.Slot;
-                }
-
                 var projection = target.Position
                     .ProjectOn(missile.StartPosition, missile.EndPosition);
 
                 if (projection.IsOnSegment &&
                     projection.SegmentPoint.Distance(target.Position) <= missile.SData.CastRadius + boundingRadius)
                 {
-                    var DangSpell =
-                        DangerousSpells.Spells.FirstOrDefault(
-                            ds =>
-                                ds.Slot == slot && champion.Hero == ds.Hero &&
-                                missile.Distance(target) <= boundingRadius + 250 &&
-                                Initializer.SettingsMenu.GetCheckBoxValue("dangSpell" + ds.Hero.ToString() +
-                                                                          ds.Slot.ToString()));
+                    var dangerLevel = 0;
 
-                    if (DangSpell != null && target.HealthPercent <= percent + sliderPercent)
+                    switch (missile.Slot)
                     {
-                        return true;
-                    }
-                    return missile.Distance(target) <= boundingRadius && target.HealthPercent <= percent;
-                }
+                        case SpellSlot.Q:
+                            var qDangerLevel =
+                                SpellDanger.SpellDangerDB.FirstOrDefault(
+                                    dl => dl.QDangerLevel != 0 && dl.Champ == champion.GetChampion());
 
-                return missile.Distance(target) <= boundingRadius && target.HealthPercent <= percent;
+                            if (qDangerLevel != null) dangerLevel = qDangerLevel.QDangerLevel;
+                            break;
+                        case SpellSlot.W:
+                            var wDangerLevel =
+                                SpellDanger.SpellDangerDB.FirstOrDefault(
+                                    dl => dl.WDangerLevel != 0 && dl.Champ == champion.GetChampion());
+
+                            if (wDangerLevel != null) dangerLevel = wDangerLevel.WDangerLevel;
+                            break;
+                        case SpellSlot.E:
+                            var eDangerLevel =
+                                SpellDanger.SpellDangerDB.FirstOrDefault(
+                                    dl => dl.EDangerLevel != 0 && dl.Champ == champion.GetChampion());
+
+                            if (eDangerLevel != null) dangerLevel = eDangerLevel.EDangerLevel;
+                            break;
+                        case SpellSlot.R:
+                            var rDangerLevel =
+                                SpellDanger.SpellDangerDB.FirstOrDefault(
+                                    dl => dl.RDangerLevel != 0 && dl.Champ == champion.GetChampion());
+
+                            if (rDangerLevel != null) dangerLevel = rDangerLevel.RDangerLevel;
+                            break;
+                    }
+
+                    if (dangerLevel != 0 && target.HealthPercent <= sliderPercent)
+                    {
+                        return new OnDangerEventArgs(dangerLevel, missile.Slot, champion.GetChampion());
+                    }
+                }
             }
-            return false;
+            return null;
         }
 
         #endregion Extensions
-        */
+
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender == null || OnDanger == null || Me.IsDead) return;
@@ -159,18 +161,19 @@ namespace Firestorm_AIO.Ultilities.Activator
         }
 
         #endregion Missiles Stuff
-
-
     }
 
     public class OnDangerEventArgs : EventArgs
     {
-        public string Status { get; private set; }
-        public string DangerLevel { get; private set; }
+        public int DangerLevel { get; private set; }
+        public SpellSlot Slot { get; private set; }
+        public Champion Champion { get; private set; }
 
-        public OnDangerEventArgs(string status)
+        public OnDangerEventArgs(int dangerLevel, SpellSlot slot, Champion champ)
         {
-            Status = status;
+            DangerLevel = dangerLevel;
+            Slot = slot;
+            Champion = champ;
         }
     }
 }
